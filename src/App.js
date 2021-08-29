@@ -9,7 +9,7 @@ import Point from "./models/Point";
 function App() {
     return (
         <div className="App">
-            <Window title="Calculator" rectangle={new Rectangle(new Point(330, 30), new Size(350, 550))}/>
+            <Window title="Calculator" x={30} y={30} width={350} height={550}/>
         </div>
     );
 }
