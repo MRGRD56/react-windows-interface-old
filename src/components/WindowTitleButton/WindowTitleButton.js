@@ -4,7 +4,7 @@ import "./WindowTitleButton.scss";
 
 function WindowTitleButton({children, isCloseButton, ...props}) {
     return (
-        <button className={"window-title-btn" + (isCloseButton ? " win-close-btn" : "")} {...props}>
+        <button className={"window-title-btn unselectable" + (isCloseButton ? " win-close-btn" : "")} {...props}>
             {children}
         </button>
     );
