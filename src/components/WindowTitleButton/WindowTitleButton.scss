@@ -1,0 +1,23 @@
+button.window-title-btn {
+    background: #e7e7e7;
+    color: black;
+    border-radius: 0;
+    border: none;
+
+    &:hover {
+        background-color: #d0d0d0;
+
+        &.win-close-btn {
+            background-color: #ff081e;
+            color: white;
+        }
+    }
+
+    &:active {
+        background-color: #b9b9b9;
+
+        &.win-close-btn {
+            background-color: #ff717b;
+        }
+    }
+}
