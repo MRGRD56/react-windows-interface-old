@@ -6,7 +6,7 @@ import WindowTitleButton from "../WindowTitleButton/WindowTitleButton";
 function WindowTitle(props) {
     return (
         <div className="d-flex flex-row justify-content-between align-items-center">
-            <div className="ms-2 unselectable">{props.title}</div>
+            <div className="ms-2 unselectable" style={{fontSize: "0.95rem"}}>{props.title}</div>
             <div className="d-flex flex-nowrap">
                 <WindowTitleButton>
                     <i className="material-icons" style={{position: "relative", top: "-5px"}}>minimize</i>
