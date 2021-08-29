@@ -4,13 +4,14 @@ import Rectangle from "../../models/Rectangle";
 import Size from "../../models/Size";
 import Point from "../../models/Point";
 import PropTypes from "prop-types";
+import WindowTitle from "../WindowTitle/WindowTitle";
 
 function Window(props) {
     let [rectangle, setRectangle] = useState(props.rectangle);
 
     return (
-        <div className="calc-window d-flex position-absolute" style={rectangle.style}>
-
+        <div className="window d-flex flex-column position-absolute" style={rectangle.style}>
+            <WindowTitle title={props.title}/>
         </div>
     );
 }

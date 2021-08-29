@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./WindowTitleButton.scss";
 
-function WindowTitleButton(props) {
+function WindowTitleButton({children, isCloseButton, ...props}) {
     return (
-        <button className={"window-title-btn" + props.isCloseButton ? "win-close-btn" : ""} {...props}>
-            {props.children}
+        <button className={"window-title-btn" + (isCloseButton ? " win-close-btn" : "")} {...props}>
+            {children}
         </button>
     );
 }
