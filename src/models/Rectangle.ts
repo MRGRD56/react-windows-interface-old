@@ -1,7 +1,10 @@
+import Point from "./Point";
+import Size from "./Size";
+
 export default class Rectangle {
-    constructor(point, size) {
-        this.point = point;
-        this.size = size;
+    constructor(
+        public readonly point: Point,
+        public readonly size: Size) {
     }
 
     get style() {

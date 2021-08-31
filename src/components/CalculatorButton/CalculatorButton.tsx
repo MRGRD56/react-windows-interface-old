@@ -1,8 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "./CalculatorButton.scss";
+import CalculatorButtonProps from "./CalculatorButtonProps";
 
-function CalculatorButton(props) {
+function CalculatorButton(props: CalculatorButtonProps) {
     return (
         <button className="calc-btn" style={{backgroundColor: props.bgColor}} onClick={props.onClick}>
             {props.children}
@@ -10,10 +10,10 @@ function CalculatorButton(props) {
     );
 }
 
-CalculatorButton.propTypes = {
-    onClick: PropTypes.func,
-    bgColor: PropTypes.string,
-    children: PropTypes.any
-};
+// CalculatorButton.propTypes = {
+//     onClick: PropTypes.func,
+//     bgColor: PropTypes.string,
+//     children: PropTypes.any
+// };
 
 export default CalculatorButton;

@@ -1,11 +1,11 @@
 import React from "react";
-import "./App.scss";
-import Window from "./components/Window/Window";
+import GuiEnvironmentProps from "./GuiEnvironmentProps";
+import Window from "../Window/Window";
 
-function App() {
+function GuiEnvironment(props: GuiEnvironmentProps) {
     let lastZIndex = 0;
 
-    function onWindowFocused(windowZIndex, setZIndex) {
+    function onWindowFocused(windowZIndex: number, setZIndex: (zIndex: number) => void) {
         if (lastZIndex === windowZIndex) return;
         setZIndex(++lastZIndex);
     }
@@ -18,4 +18,4 @@ function App() {
     );
 }
 
-export default App;
+export default GuiEnvironment;

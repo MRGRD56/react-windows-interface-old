@@ -3,8 +3,9 @@ import Side from "../../models/Side";
 import React from "react";
 import PropTypes from "prop-types";
 import "./WindowResizeBorders.scss";
+import windowResizeBordersProps from "./WindowResizeBordersProps";
 
-function WindowResizeBorders({onResize, onResizeStart, onResizeStop}) {
+function WindowResizeBorders({onResize, onResizeStart, onResizeStop}: windowResizeBordersProps) {
     const resizeBorders = [
         {
             sideString: "t",
@@ -52,10 +53,10 @@ function WindowResizeBorders({onResize, onResizeStart, onResizeStop}) {
     );
 }
 
-WindowResizeBorders.propTypes = {
-    onResize: PropTypes.func,
-    onResizeStart: PropTypes.func,
-    onResizeStop: PropTypes.func
-};
+// WindowResizeBorders.propTypes = {
+//     onResize: PropTypes.func,
+//     onResizeStart: PropTypes.func,
+//     onResizeStop: PropTypes.func
+// };
 
 export default WindowResizeBorders;

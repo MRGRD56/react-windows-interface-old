@@ -1,20 +1,17 @@
-import React, {useState} from "react";
+import React, {MouseEventHandler, useState} from "react";
 import "./WindowTitle.scss";
 import PropTypes from "prop-types";
 import WindowTitleButton from "../WindowTitleButton/WindowTitleButton";
 import {DraggableCore} from "react-draggable";
+import WindowTitleProps from "./WindowTitleProps";
 
 function WindowTitle({title, onDrag, onDragStart, onDragStop,
-    isMaximized, onMinimizeClick, onMaximizeClick, onCloseClick, ...props}) {
-    function onTitleDoubleClick(e) {
-        onMaximizeClick(e);
-    }
-
+    isMaximized, onMinimizeClick, onMaximizeClick, onCloseClick, ...props}: WindowTitleProps) {
     return (
         <div className="window-title d-flex flex-row justify-content-between align-items-stretch" {...props}>
-            <DraggableCore onDrag={onDrag} onStart={onDragStart} onStop={onDragStop} axis="both">
+            <DraggableCore onDrag={onDrag} onStart={onDragStart} onStop={onDragStop}>
                 <div className="ps-2 unselectable d-flex align-items-center" style={{fontSize: "0.95rem", flex: 1}}
-                    onDoubleClick={onTitleDoubleClick}>
+                    onDoubleClick={onMaximizeClick}>
                     {title}
                 </div>
             </DraggableCore>
@@ -33,15 +30,15 @@ function WindowTitle({title, onDrag, onDragStart, onDragStop,
     );
 }
 
-WindowTitle.propTypes = {
-    title: PropTypes.string,
-    onDrag: PropTypes.func,
-    onDragStart: PropTypes.func,
-    onDragStop: PropTypes.func,
-    isMaximized: PropTypes.bool,
-    onMinimizeClick: PropTypes.func,
-    onMaximizeClick: PropTypes.func,
-    onCloseClick: PropTypes.func
-};
+// WindowTitle.propTypes = {
+//     title: PropTypes.string,
+//     onDrag: PropTypes.func,
+//     onDragStart: PropTypes.func,
+//     onDragStop: PropTypes.func,
+//     isMaximized: PropTypes.bool,
+//     onMinimizeClick: PropTypes.func,
+//     onMaximizeClick: PropTypes.func,
+//     onCloseClick: PropTypes.func
+// };
 
 export default WindowTitle;

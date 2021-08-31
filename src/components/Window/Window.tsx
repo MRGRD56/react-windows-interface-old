@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {MouseEventHandler, useState} from "react";
 import "./Window.scss";
 import Rectangle from "../../models/Rectangle";
 import Size from "../../models/Size";
@@ -8,8 +8,10 @@ import WindowTitle from "../WindowTitle/WindowTitle";
 import Side from "../../models/Side";
 import WindowResizeBorders from "../WindowResizeBorders/WindowResizeBorders";
 import {classes} from "../../utilities/values";
+import WindowProps from "./WindowProps";
 
-function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic, isMaximized, children, zIndex, onFocused, ...props}) {
+function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
+    isMaximized, children, zIndex, onFocused, ...props}: WindowProps) {
     const [rectangle, setRectangle] = useState(
         new Rectangle(
             new Point(x ?? 0, y ?? 0),
@@ -35,11 +37,9 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic, isM
         }, 75);
     }
 
-    const [lastDragEvent, setLastDragEvent] = useState();
+    const [windowZIndex, setZIndex] = useState<number>();
 
-    const [windowZIndex, setZIndex] = useState();
-
-    const onDrag = e => {
+    const onDrag = (e: any) => {
         const [x, y] = [e.movementX, e.movementY];
         setRectangle(new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size));
         if (state.isMaximized) {
@@ -56,14 +56,10 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic, isM
                 isMaximized: false
             });
         }
-        if (e) {
-            setLastDragEvent(e);
-        }
     };
 
-    const onDragStop = () => {
-        console.log(lastDragEvent);
-        if (!state.isMaximized && lastDragEvent && lastDragEvent.clientY <= 0) {
+    const onDragStop = (e: any) => {
+        if (!state.isMaximized && e.clientY <= 0) {
             toggleIsMaximized();
         }
         if (rectangle.point.y < 0) {
@@ -71,7 +67,7 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic, isM
         }
     };
 
-    function onResize(e, side) {
+    function onResize(e: any, side: Side) {
         if (state.isMaximized) return;
 
         const [isTop, isRight, isBottom, isLeft] = [
@@ -163,7 +159,7 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic, isM
     }
 
     function onMouseDown() {
-        onFocused?.(windowZIndex, setZIndex);
+        onFocused?.(windowZIndex!, setZIndex);
     }
 
     return (
