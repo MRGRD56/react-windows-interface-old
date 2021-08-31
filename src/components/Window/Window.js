@@ -40,19 +40,22 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic, isM
     const [windowZIndex, setZIndex] = useState();
 
     const onDrag = e => {
+        const [x, y] = [e.movementX, e.movementY];
+        setRectangle(new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size));
         if (state.isMaximized) {
+            const titleButtonsWidth = 138;
+            const xPosPercentage = e.clientX / (window.innerWidth - titleButtonsWidth);
+            const newXPos = e.clientX - (rectangle.size.width - titleButtonsWidth) * xPosPercentage;
+            console.log(xPosPercentage, newXPos);
             setRectangle(
                 new Rectangle(
-                    new Point(rectangle.po),
+                    new Point(newXPos, rectangle.point.y),
                     rectangle.size));
             setState({
                 ...state,
                 isMaximized: false
             });
         }
-
-        const [x, y] = [e.movementX, e.movementY];
-        setRectangle(new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size));
         if (e) {
             setLastDragEvent(e);
         }
