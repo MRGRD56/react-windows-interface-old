@@ -8,25 +8,65 @@ import WindowTitle from "../WindowTitle/WindowTitle";
 import Draggable, {DraggableCore} from "react-draggable";
 import ResizeBorder from "../ResizeBorder/ResizeBorder";
 import Side from "../../models/Side";
+import WindowResizeBorders from "../WindowResizeBorders/WindowResizeBorders";
+import {classes} from "../../utilities/values";
+import useForceUpdate from "../../hooks/useForceUpdate";
 
 function Window(props) {
-    let [rectangle, setRectangle] = useState(
+    const [rectangle, setRectangle] = useState(
         new Rectangle(
             new Point(props.x ?? 0, props.y ?? 0),
             new Size(props.width ?? 300, props.height ?? 300)));
 
-    function onDrag(e) {
-        const [x, y] = [e.movementX, e.movementY];
-        setRectangle(new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size));
+    const [state, setState] = useState({
+        isMaximized: props.isMaximized ?? false,
+        isAnimated: false
+    });
+
+    function toggleIsMaximized() {
+        const newState = {
+            ...state,
+            isAnimated: true,
+            isMaximized: state.isMaximized !== true
+        };
+        setState(newState);
+        setTimeout(() => {
+            setState({
+                ...newState,
+                isAnimated: false
+            });
+        }, 75);
     }
 
-    function onDragStop() {
+    const [lastDragEvent, setLastDragEvent] = useState();
+
+    const onDrag = e => {
+        if (state.isMaximized) {
+            return;
+        }
+
+        const [x, y] = [e.movementX, e.movementY];
+        setRectangle(new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size));
+        if (e) {
+            setLastDragEvent(e);
+        }
+    };
+
+    const onDragStop = () => {
+        console.log(lastDragEvent);
+        if (!state.isMaximized && lastDragEvent && lastDragEvent.clientY <= 0) {
+            toggleIsMaximized();
+        }
         if (rectangle.point.y < 0) {
             setRectangle(new Rectangle(new Point(rectangle.point.x, 0), rectangle.size));
         }
-    }
+    };
 
     function onResize(e, side) {
+        if (state.isMaximized) {
+            return;
+        }
+
         const [isTop, isRight, isBottom, isLeft] = [
             (side & Side.top) === Side.top,
             (side & Side.right) === Side.right,
@@ -94,38 +134,29 @@ function Window(props) {
 
     function onResizeStop() {
         isResizing = false;
+        if (rectangle.point.y < 0) {
+            setRectangle(
+                new Rectangle(
+                    new Point(
+                        rectangle.point.x,
+                        0),
+                    new Size(
+                        rectangle.size.width,
+                        rectangle.size.height + rectangle.point.y)));
+        }
     }
 
     return (
-        <div className={`window${props.isAcrylic !== false ? " acrylic" : ""} d-flex flex-column position-absolute`}
+        <div
+            className={"window " + classes({
+                "acrylic": () => props.isAcrylic !== false,
+                "maximized": () => state.isMaximized !== false,
+                "animated": () => state.isAnimated
+            })}
             style={rectangle.style}>
-            <div className="resize-borders-wrapper">
-                <ResizeBorder className="resize-border resize-border-t"
-                    onDrag={e => onResize(e, Side.top)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-                <ResizeBorder className="resize-border resize-border-r"
-                    onDrag={e => onResize(e, Side.right)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-                <ResizeBorder className="resize-border resize-border-b"
-                    onDrag={e => onResize(e, Side.bottom)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-                <ResizeBorder className="resize-border resize-border-l"
-                    onDrag={e => onResize(e, Side.left)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-                <ResizeBorder className="resize-border resize-border-tl"
-                    onDrag={e => onResize(e, Side.top | Side.left)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-                <ResizeBorder className="resize-border resize-border-tr"
-                    onDrag={e => onResize(e, Side.top | Side.right)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-                <ResizeBorder className="resize-border resize-border-br"
-                    onDrag={e => onResize(e, Side.bottom | Side.right)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-                <ResizeBorder className="resize-border resize-border-bl"
-                    onDrag={e => onResize(e, Side.bottom | Side.left)}
-                    onDragStart={onResizeStart} onDragStop={onResizeStop}/>
-            </div>
-            <WindowTitle title={props.title} onDrag={onDrag} onDragStop={onDragStop}/>
+            <WindowResizeBorders onResize={onResize} onResizeStart={onResizeStart} onResizeStop={onResizeStop}/>
+            <WindowTitle title={props.title} onDrag={onDrag} onDragStop={onDragStop}
+                onMaximizeClick={toggleIsMaximized}/>
         </div>
     );
 }
@@ -138,7 +169,8 @@ Window.propTypes = {
     height: PropTypes.number,
     minWidth: PropTypes.number,
     minHeight: PropTypes.number,
-    isAcrylic: PropTypes.bool
+    isAcrylic: PropTypes.bool,
+    isMaximized: PropTypes.bool
 };
 
 export default Window;
