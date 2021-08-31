@@ -122,15 +122,27 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
             sizeIncrement.height = y;
         }
 
-        setRectangle(
-            new Rectangle(
-                new Point(
-                    rectangle.point.x + pointIncrement.x,
-                    rectangle.point.y + pointIncrement.y
-                ),
-                new Size(
-                    rectangle.size.width + sizeIncrement.width,
-                    rectangle.size.height + sizeIncrement.height)));
+        const newRectangle = new Rectangle(
+            new Point(
+                rectangle.point.x + pointIncrement.x,
+                rectangle.point.y + pointIncrement.y
+            ),
+            new Size(
+                rectangle.size.width + sizeIncrement.width,
+                rectangle.size.height + sizeIncrement.height));
+
+        //FIXME
+        // if (pointIncrement.x !== 0 || pointIncrement.y !== 0) {
+        //     if (newRectangle.size.width <= getMinSize().width) {
+        //         console.log(rectangle, newRectangle);
+        //         newRectangle.point.x = rectangle.point.x + Math.min(Math.abs(newRectangle.size.width - getMinSize().width), x);
+        //     }
+        //     if (newRectangle.size.height <= getMinSize().height) {
+        //         newRectangle.point.y = rectangle.point.y;
+        //     }
+        // }
+
+        setRectangle(newRectangle);
     }
 
     let isResizing = false;
