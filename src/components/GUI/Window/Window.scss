@@ -8,8 +8,16 @@
     flex-direction: column;
     position: absolute;
 
-    &.animated {
-        transition: width 0.075s, height 0.075s, left 0.075s, right 0.075s, opacity 0.075s;
+    &.animated-short {
+        transition: width 0.075s, height 0.075s, left 0.075s, top 0.075s, opacity 0.075s, transform 0.075s;
+    }
+
+    &.animated-normal {
+        transition: width 0.5s, height 0.5s, left 0.5s, top 0.5s, opacity 0.5s, transform 0.5s;
+    }
+
+    &.animated-long {
+        transition: width 1s, height 1s, left 1s, top 1s, opacity 1s, transform 1s;
     }
 
     &.acrylic {
@@ -35,5 +43,18 @@
 
     &.closed {
         display: none;
+    }
+
+    &.minimized {
+        opacity: 0;
+        top: 100% !important;
+        transform: scale(0.01);
+        min-width: 50px !important;
+        min-height: 50px !important;
+    }
+
+    & .window-content {
+        overflow: hidden;
+        height: 100%;
     }
 }

@@ -8,7 +8,9 @@ export default interface WindowProps {
     minHeight?: number,
     isAcrylic?: boolean,
     isMaximized?: boolean,
+    isMinimized?: boolean,
     children?: JSX.Element,
     zIndex?: number,
+    isResizable?: boolean,
     onFocused?: (windowZIndex: number, setZIndex: (zIndex: number) => void) => void
 }

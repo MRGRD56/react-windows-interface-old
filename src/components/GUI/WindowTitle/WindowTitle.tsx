@@ -10,7 +10,7 @@ function WindowTitle({title, onDrag, onDragStart, onDragStop,
     return (
         <div className="window-title d-flex flex-row justify-content-between align-items-stretch" {...props}>
             <DraggableCore onDrag={onDrag} onStart={onDragStart} onStop={onDragStop}>
-                <div className="ps-2 unselectable d-flex align-items-center" style={{fontSize: "0.95rem", flex: 1}}
+                <div className="ps-2 unselectable d-flex align-items-center window-title-text"
                     onDoubleClick={onMaximizeClick}>
                     {title}
                 </div>
