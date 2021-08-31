@@ -1,17 +1,17 @@
 import React, {MouseEventHandler, useState} from "react";
 import "./Window.scss";
-import Rectangle from "../../models/Rectangle";
-import Size from "../../models/Size";
-import Point from "../../models/Point";
+import Rectangle from "../../../models/Rectangle";
+import Size from "../../../models/Size";
+import Point from "../../../models/Point";
 import PropTypes from "prop-types";
 import WindowTitle from "../WindowTitle/WindowTitle";
-import Side from "../../models/Side";
+import Side from "../../../models/Side";
 import WindowResizeBorders from "../WindowResizeBorders/WindowResizeBorders";
-import {classes} from "../../utilities/values";
+import {classes} from "../../../utilities/values";
 import WindowProps from "./WindowProps";
 
 function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
-    isMaximized, children, zIndex, onFocused, ...props}: WindowProps) {
+    isMaximized, children, onFocused, ...props}: WindowProps) {
     const [rectangle, setRectangle] = useState(
         new Rectangle(
             new Point(x ?? 0, y ?? 0),
@@ -19,7 +19,9 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
 
     const [state, setState] = useState({
         isMaximized: isMaximized ?? false,
-        isAnimated: false
+        isAnimated: false,
+        isClosing: false,
+        isClosed: false
     });
 
     function toggleIsMaximized() {
@@ -159,7 +161,24 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
     }
 
     function onMouseDown() {
-        onFocused?.(windowZIndex!, setZIndex);
+        onFocused?.(windowZIndex, setZIndex);
+    }
+
+    function onCloseClick() {
+        const newState = {
+            ...state,
+            isAnimated: true,
+            isClosing: true
+        };
+        setState(newState);
+        setTimeout(() => {
+            setState({
+                ...newState,
+                isClosing: false,
+                isClosed: true,
+                isAnimated: false
+            });
+        }, 75);
     }
 
     return (
@@ -167,13 +186,15 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
             className={"window " + classes({
                 "acrylic": () => isAcrylic !== false,
                 "maximized": () => state.isMaximized !== false,
-                "animated": () => state.isAnimated
+                "animated": () => state.isAnimated,
+                "closing": () => state.isClosing,
+                "closed": () => state.isClosed
             })}
             style={{...rectangle.style, minWidth: minWidth, minHeight: minHeight, zIndex: windowZIndex}}
             onMouseDown={onMouseDown}>
             <WindowResizeBorders onResize={onResize} onResizeStart={onResizeStart} onResizeStop={onResizeStop}/>
             <WindowTitle title={title} onDrag={onDrag} onDragStop={onDragStop}
-                onMaximizeClick={toggleIsMaximized}/>
+                onMaximizeClick={toggleIsMaximized} onCloseClick={onCloseClick}/>
             {children}
         </div>
     );

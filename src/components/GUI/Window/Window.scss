@@ -9,7 +9,7 @@
     position: absolute;
 
     &.animated {
-        transition: width 0.075s, height 0.075s, left 0.075s, right 0.075s;
+        transition: width 0.075s, height 0.075s, left 0.075s, right 0.075s, opacity 0.075s;
     }
 
     &.acrylic {
@@ -22,9 +22,18 @@
         height: 100% !important;
         top: 0 !important;
         left: 0 !important;
+        border: none;
 
         & .resize-borders-wrapper {
             display: none !important;
         }
+    }
+
+    &.closing {
+        opacity: 0;
+    }
+
+    &.closed {
+        display: none;
     }
 }

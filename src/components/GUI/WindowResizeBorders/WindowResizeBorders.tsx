@@ -1,5 +1,5 @@
 import ResizeBorder from "../ResizeBorder/ResizeBorder";
-import Side from "../../models/Side";
+import Side from "../../../models/Side";
 import React from "react";
 import PropTypes from "prop-types";
 import "./WindowResizeBorders.scss";
