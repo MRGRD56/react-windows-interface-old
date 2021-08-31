@@ -1,12 +1,13 @@
 .resize-borders-wrapper {
     position: absolute;
-    width: calc(100% + 10px);
-    height: calc(100% + 5px);
+    width: calc(100% + 16px);
+    height: calc(100% + 9px);
     pointer-events: none;
     display: grid;
-    grid-template-rows: 10px 1fr 10px;
-    grid-template-columns: 10px 1fr 10px;
-    left: -5px;
+    grid-template-rows: 5px 1fr 8px;
+    grid-template-columns: 8px 1fr 8px;
+    left: -8px;
+    top: -1px;
 
     &>.resize-border {
         pointer-events: all;

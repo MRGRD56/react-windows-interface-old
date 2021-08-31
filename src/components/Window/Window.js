@@ -5,21 +5,18 @@ import Size from "../../models/Size";
 import Point from "../../models/Point";
 import PropTypes from "prop-types";
 import WindowTitle from "../WindowTitle/WindowTitle";
-import Draggable, {DraggableCore} from "react-draggable";
-import ResizeBorder from "../ResizeBorder/ResizeBorder";
 import Side from "../../models/Side";
 import WindowResizeBorders from "../WindowResizeBorders/WindowResizeBorders";
 import {classes} from "../../utilities/values";
-import useForceUpdate from "../../hooks/useForceUpdate";
 
-function Window(props) {
+function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic, isMaximized, children, zIndex, onFocused, ...props}) {
     const [rectangle, setRectangle] = useState(
         new Rectangle(
-            new Point(props.x ?? 0, props.y ?? 0),
-            new Size(props.width ?? 300, props.height ?? 300)));
+            new Point(x ?? 0, y ?? 0),
+            new Size(width ?? 300, height ?? 300)));
 
     const [state, setState] = useState({
-        isMaximized: props.isMaximized ?? false,
+        isMaximized: isMaximized ?? false,
         isAnimated: false
     });
 
@@ -40,9 +37,18 @@ function Window(props) {
 
     const [lastDragEvent, setLastDragEvent] = useState();
 
+    const [windowZIndex, setZIndex] = useState();
+
     const onDrag = e => {
         if (state.isMaximized) {
-            return;
+            setRectangle(
+                new Rectangle(
+                    new Point(rectangle.po),
+                    rectangle.size));
+            setState({
+                ...state,
+                isMaximized: false
+            });
         }
 
         const [x, y] = [e.movementX, e.movementY];
@@ -63,9 +69,7 @@ function Window(props) {
     };
 
     function onResize(e, side) {
-        if (state.isMaximized) {
-            return;
-        }
+        if (state.isMaximized) return;
 
         const [isTop, isRight, isBottom, isLeft] = [
             (side & Side.top) === Side.top,
@@ -144,19 +148,34 @@ function Window(props) {
                         rectangle.size.width,
                         rectangle.size.height + rectangle.point.y)));
         }
+        if (rectangle.size.width < minWidth
+            || rectangle.size.height < minHeight) {
+            setRectangle(new Rectangle(
+                rectangle.point,
+                new Size(
+                    Math.max(rectangle.size.width, minWidth),
+                    Math.max(rectangle.size.height, minHeight))
+            ));
+        }
+    }
+
+    function onMouseDown() {
+        onFocused?.(windowZIndex, setZIndex);
     }
 
     return (
-        <div
+        <div {...props}
             className={"window " + classes({
-                "acrylic": () => props.isAcrylic !== false,
+                "acrylic": () => isAcrylic !== false,
                 "maximized": () => state.isMaximized !== false,
                 "animated": () => state.isAnimated
             })}
-            style={rectangle.style}>
+            style={{...rectangle.style, minWidth: minWidth, minHeight: minHeight, zIndex: windowZIndex}}
+            onMouseDown={onMouseDown}>
             <WindowResizeBorders onResize={onResize} onResizeStart={onResizeStart} onResizeStop={onResizeStop}/>
-            <WindowTitle title={props.title} onDrag={onDrag} onDragStop={onDragStop}
+            <WindowTitle title={title} onDrag={onDrag} onDragStop={onDragStop}
                 onMaximizeClick={toggleIsMaximized}/>
+            {children}
         </div>
     );
 }
@@ -170,7 +189,10 @@ Window.propTypes = {
     minWidth: PropTypes.number,
     minHeight: PropTypes.number,
     isAcrylic: PropTypes.bool,
-    isMaximized: PropTypes.bool
+    isMaximized: PropTypes.bool,
+    children: PropTypes.any,
+    zIndex: PropTypes.number,
+    onFocused: PropTypes.func
 };
 
 export default Window;
