@@ -229,7 +229,8 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
             onMouseDown={onMouseDown}>
             <WindowResizeBorders onResize={onResize} onResizeStart={onResizeStart} onResizeStop={onResizeStop}/>
             <WindowTitle title={title} onDrag={onDrag} onDragStop={onDragStop}
-                onMinimizeClick={onMinimizeClick} onMaximizeClick={toggleIsMaximized} onCloseClick={onCloseClick}/>
+                onMinimizeClick={onMinimizeClick} onMaximizeClick={toggleIsMaximized} onCloseClick={onCloseClick}
+                isMaximized={state.isMaximized}/>
             <div className="window-content">
                 {children}
             </div>

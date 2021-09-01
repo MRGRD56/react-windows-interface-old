@@ -3,6 +3,7 @@ import GuiEnvironmentProps from "./GuiEnvironmentProps";
 import Window from "../Window/Window";
 import DebugWindow from "../../Programs/DebugWindow/DebugWindow";
 import InternetBrowser from "../../Programs/InternetBrowser/InternetBrowser";
+import "./GuiEnvironment.scss";
 
 function GuiEnvironment(props: GuiEnvironmentProps) {
     let lastZIndex = 0;

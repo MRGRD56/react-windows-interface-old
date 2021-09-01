@@ -3,12 +3,6 @@
 @import "~bootstrap/dist/css/bootstrap-grid.min.css";
 @import "~bootstrap/dist/css/bootstrap-utilities.min.css";
 
-body {
-    background: url("assets/img/background.jpg") no-repeat center center fixed;
-    background-size: cover;
-    overflow: hidden;
-}
-
 .unselectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

@@ -5,7 +5,7 @@ button.window-title-btn {
     border: none;
     width: 46px;
     height: 32px;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color 0.2s, color 0.2s, filter 0.2s;
 
     &>* {
         display: flex;
@@ -26,6 +26,10 @@ button.window-title-btn {
         &.win-close-btn {
             background-color: #ff081e;
             color: white;
+
+            &>img, &>*>img {
+                filter: invert(95%) sepia(99%) saturate(2%) hue-rotate(102deg) brightness(107%) contrast(100%);
+            }
         }
     }
 
@@ -35,6 +39,10 @@ button.window-title-btn {
         &.win-close-btn {
             background-color: #ff717b;
             color: white;
+
+            &>img, &>*>img {
+                filter: invert(95%) sepia(99%) saturate(2%) hue-rotate(102deg) brightness(107%) contrast(100%);
+            }
         }
     }
 }

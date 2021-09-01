@@ -4,6 +4,10 @@ import PropTypes from "prop-types";
 import WindowTitleButton from "../WindowTitleButton/WindowTitleButton";
 import {DraggableCore} from "react-draggable";
 import WindowTitleProps from "./WindowTitleProps";
+import windowMinimize from "../../../assets/img/icons/window_minimize.svg";
+import windowMaximizeNormal from "../../../assets/img/icons/window_maximize_normal.svg";
+import windowMaximizeMaximized from "../../../assets/img/icons/window_maximize_maximized.svg";
+import windowClose from "../../../assets/img/icons/window_close.svg";
 
 function WindowTitle({title, onDrag, onDragStart, onDragStop,
     isMaximized, onMinimizeClick, onMaximizeClick, onCloseClick, ...props}: WindowTitleProps) {
@@ -17,13 +21,21 @@ function WindowTitle({title, onDrag, onDragStart, onDragStop,
             </DraggableCore>
             <div className="d-flex flex-nowrap">
                 <WindowTitleButton onClick={onMinimizeClick}>
-                    <i className="material-icons" style={{position: "relative", top: "-5px"}}>minimize</i>
+                    <i className="material-icons">
+                        <img src={windowMinimize} width={10} height={10}/>
+                    </i>
                 </WindowTitleButton>
                 <WindowTitleButton onClick={onMaximizeClick}>
-                    <i className="material-icons">crop_square</i>
+                    <i className="material-icons">
+                        {isMaximized
+                            ? <img src={windowMaximizeMaximized} width={10} height={10}/>
+                            : <img src={windowMaximizeNormal} width={10} height={10}/>}
+                    </i>
                 </WindowTitleButton>
                 <WindowTitleButton isCloseButton={true} onClick={onCloseClick}>
-                    <i className="material-icons">close</i>
+                    <i className="material-icons">
+                        <img src={windowClose} width={10} height={10}/>
+                    </i>
                 </WindowTitleButton>
             </div>
         </div>

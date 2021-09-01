@@ -39,6 +39,7 @@
 
     &.closing {
         opacity: 0;
+        pointer-events: none;
     }
 
     &.closed {
@@ -51,6 +52,7 @@
         transform: scale(0.01);
         min-width: 50px !important;
         min-height: 50px !important;
+        pointer-events: none;
     }
 
     & .window-content {
