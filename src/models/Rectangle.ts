@@ -21,4 +21,19 @@ export default class Rectangle implements IEquals {
         return this.point.equals(another.point)
             && this.size.equals(another.size);
     }
+
+    static get defaultWindowRectangle(): Rectangle {
+        return new Rectangle(new Point(30, 30), new Size(300, 300));
+    }
+
+    static getScreenCenter(size: Size): Rectangle {
+        const screenCenterPoint = Point.screenCenter;
+        return new Rectangle(
+            new Point(
+                screenCenterPoint.x - size.width / 2,
+                screenCenterPoint.y - size.height / 2
+            ),
+            size
+        );
+    }
 }

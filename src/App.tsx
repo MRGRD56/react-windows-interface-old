@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.scss";
-import Window from "./components/GUI/Window/Window";
+import WindowComponent from "./components/GUI/Window/WindowComponent";
 import GuiEnvironment from "./components/GUI/GuiEnvironment/GuiEnvironment";
 
 function App() {

@@ -10,4 +10,8 @@ export default class Size implements IEquals {
         return this.width == another.width
             && this.height == another.height;
     }
+
+    static get screenSize(): Size {
+        return new Size(window.innerWidth, innerHeight);
+    }
 }

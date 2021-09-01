@@ -1,21 +1,17 @@
 import React, {MouseEventHandler, useState} from "react";
-import "./Window.scss";
+import "./WindowComponent.scss";
 import Rectangle from "../../../models/Rectangle";
 import Size from "../../../models/Size";
 import Point from "../../../models/Point";
-import PropTypes from "prop-types";
 import WindowTitle from "../WindowTitle/WindowTitle";
 import Side from "../../../models/Side";
 import WindowResizeBorders from "../WindowResizeBorders/WindowResizeBorders";
 import {classes} from "../../../utilities/values";
-import WindowProps from "./WindowProps";
+import WindowComponentProps from "./WindowComponentProps";
 
-function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
-    isMaximized, isMinimized, children, onFocused, isResizable, ...props}: WindowProps) {
-    const [rectangle, setRectangle] = useState(
-        new Rectangle(
-            new Point(x ?? 0, y ?? 0),
-            new Size(width ?? 300, height ?? 300)));
+function WindowComponent({isMaximized, isMinimized, children, onFocused, isResizable,
+    closeFunction, minimizeFunction, maximizeFunction, zIndex, windowInfo, ...props}: WindowComponentProps) {
+    const [rectangle, setRectangle] = useState(windowInfo.rectangle ?? Rectangle.defaultWindowRectangle);
 
     const [state, setState] = useState({
         isMaximized: isMaximized ?? false,
@@ -38,6 +34,7 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
                 ...newState,
                 isAnimatedShort: false
             });
+            maximizeFunction?.(newState.isMaximized);
         }, 75);
     }
 
@@ -59,6 +56,7 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
                 ...state,
                 isMaximized: false
             });
+            maximizeFunction?.(false);
         }
     };
 
@@ -192,6 +190,7 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
                 isClosed: true,
                 isAnimatedShort: false
             });
+            closeFunction?.();
         }, 75);
     }
 
@@ -202,22 +201,23 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
             isAnimatedNormal: true
         };
         setState(newState);
+        minimizeFunction?.(true);
         setTimeout(() => {
             setState({
                 ...newState,
                 isAnimatedNormal: false
             });
-        }, 1000);
+        }, 500);
     }
 
     function getMinSize(): Size {
-        return new Size(Math.max(minWidth ?? 0, 146), Math.max(minHeight ?? 0, 32));
+        return new Size(Math.max(windowInfo.minSize?.width ?? 0, 146), Math.max(windowInfo.minSize?.height ?? 0, 32));
     }
 
     return (
         <div {...props}
             className={"window " + classes({
-                "acrylic": () => isAcrylic !== false,
+                "acrylic": () => windowInfo.isAcrylic !== false,
                 "maximized": () => state.isMaximized !== false,
                 "minimized": () => state.isMinimized,
                 "animated-short": () => state.isAnimatedShort,
@@ -228,7 +228,7 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
             style={{...rectangle.style, minWidth: getMinSize().width, minHeight: getMinSize().height, zIndex: windowZIndex}}
             onMouseDown={onMouseDown}>
             <WindowResizeBorders onResize={onResize} onResizeStart={onResizeStart} onResizeStop={onResizeStop}/>
-            <WindowTitle title={title} onDrag={onDrag} onDragStop={onDragStop}
+            <WindowTitle title={windowInfo.title} onDrag={onDrag} onDragStop={onDragStop}
                 onMinimizeClick={onMinimizeClick} onMaximizeClick={toggleIsMaximized} onCloseClick={onCloseClick}
                 isMaximized={state.isMaximized}/>
             <div className="window-content">
@@ -238,19 +238,4 @@ function Window({title, x, y, width, height, minWidth, minHeight, isAcrylic,
     );
 }
 
-// Window.propTypes = {
-//     title: PropTypes.string,
-//     x: PropTypes.number,
-//     y: PropTypes.number,
-//     width: PropTypes.number,
-//     height: PropTypes.number,
-//     minWidth: PropTypes.number,
-//     minHeight: PropTypes.number,
-//     isAcrylic: PropTypes.bool,
-//     isMaximized: PropTypes.bool,
-//     children: PropTypes.any,
-//     zIndex: PropTypes.number,
-//     onFocused: PropTypes.func
-// };
-
-export default Window;
+export default WindowComponent;
