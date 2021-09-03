@@ -1,6 +1,6 @@
 import React from "react";
-import DesktopEnvironment from "./models/DesktopEnvironment";
+import DesktopEnvironmentContext from "./models/DesktopEnvironmentContext";
 
-const DE = React.createContext<DesktopEnvironment>(undefined);
+const DE = React.createContext<DesktopEnvironmentContext>(undefined);
 
 export default DE;

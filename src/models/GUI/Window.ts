@@ -9,12 +9,15 @@ export default class Window {
 
     constructor(
         title: string,
-        private readonly windowInterop: WindowInterop,
+        public readonly windowInterop: WindowInterop,
         public rectangle: Rectangle = undefined,
         public minSize: Size = undefined,
-        public content: JSX.Element = undefined) {
+        public content: JSX.Element = undefined,
+        id: number = undefined) {
 
-        this.id = ++Window.idCounter;
+        this.id = id === undefined
+            ? ++Window.idCounter
+            : id;
         this.title = title;
         if (rectangle == null) {
             rectangle = new Rectangle(new Point(30, 30), new Size(400, 400));
@@ -29,7 +32,7 @@ export default class Window {
     set isMinimized(value: boolean) {
         this._isMinimized = value;
         this.windowInterop.minimizeFunction(this, value);
-        this.isMinimizedChangedSubscriber.next(value);
+        this.isMinimizedChangedSubscriber?.next(value);
     }
 
     get isMaximized(): boolean {
@@ -38,7 +41,7 @@ export default class Window {
     set isMaximized(value: boolean) {
         this._isMaximized = value;
         this.windowInterop.maximizeFunction(this, value);
-        this.isMaximizedChangedSubscriber.next(value);
+        this.isMaximizedChangedSubscriber?.next(value);
     }
     // private _title: string;
     // public get title() {
@@ -81,11 +84,11 @@ export default class Window {
     });
 
     close(): void {
-        this.closingSubscriber.next();
+        this.closingSubscriber?.next();
 
         this.windowInterop.closeFunction(this);
         this._isClosed = true;
 
-        this.closedSubscriber.next();
+        this.closedSubscriber?.next();
     }
 }

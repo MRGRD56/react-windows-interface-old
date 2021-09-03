@@ -11,12 +11,13 @@ import Rectangle from "../../../models/Rectangle";
 import Point from "../../../models/Point";
 import Size from "../../../models/Size";
 import WindowInterop from "../../../services/models/WindowInterop";
+import DesktopEnvironmentContext from "../../../services/models/DesktopEnvironmentContext";
 
 function GuiEnvironment(props: GuiEnvironmentProps): JSX.Element {
     function closeWindow(window: Window) {
         console.log("CLOSE", window.id);
-        const windows = de.windows.filter(w => w.id !== window.id);
-        setDE(new DesktopEnvironment(windowInterop, windows));
+        const windows = state.desktopEnvironment.windows.filter(w => w.id !== window.id);
+        setState(new DesktopEnvironmentContext(windowInterop, setDE, new DesktopEnvironment(windows)));
     }
 
     function minimizeWindow(window: Window, isMinimized: boolean) {
@@ -28,7 +29,7 @@ function GuiEnvironment(props: GuiEnvironmentProps): JSX.Element {
     }
 
     function addWindow(window: Window) {
-        setDE(new DesktopEnvironment(windowInterop, de.windows.concat([window])));
+        setState(new DesktopEnvironmentContext(windowInterop, setDE, new DesktopEnvironment(state.desktopEnvironment.windows.concat([window]))));
     }
 
     function createCloseWindow(window: Window) {
@@ -56,24 +57,29 @@ function GuiEnvironment(props: GuiEnvironmentProps): JSX.Element {
         addWindow
     );
 
-    const [de, setDE] = useState(new DesktopEnvironment(windowInterop, [
-        new Window("Calculator",
-            windowInterop,
-            new Rectangle(new Point(30, 30), new Size(350, 550)),
-            new Size(230, 32)),
-        new Window("Online Color Picker by MRGRD56",
-            windowInterop,
-            new Rectangle(new Point(50, 50), new Size(500, 400)), undefined,
-            (
-                <InternetBrowser/>
-            )),
-        new Window("⭐ Debug",
-            windowInterop,
-            Rectangle.getScreenCenter(new Size(250, 250)), undefined,
-            (
-                <DebugWindow/>
-            ))
-    ]));
+    function setDE(de: DesktopEnvironment) {
+        setState(new DesktopEnvironmentContext(windowInterop, setDE, de));
+    }
+
+    const [state, setState] = useState(new DesktopEnvironmentContext(windowInterop, setDE,
+        new DesktopEnvironment([
+            new Window("Calculator",
+                windowInterop,
+                new Rectangle(new Point(30, 30), new Size(350, 550)),
+                new Size(230, 32)),
+            new Window("Online Color Picker by MRGRD56",
+                windowInterop,
+                new Rectangle(new Point(50, 50), new Size(500, 400)), undefined,
+                (
+                    <InternetBrowser/>
+                )),
+            new Window("⭐ Debug",
+                windowInterop,
+                Rectangle.getScreenCenter(new Size(250, 250)), undefined,
+                (
+                    <DebugWindow/>
+                ))
+        ])));
 
     let lastZIndex = 0;
 
@@ -83,9 +89,9 @@ function GuiEnvironment(props: GuiEnvironmentProps): JSX.Element {
     }
 
     return (
-        <DE.Provider value={de}>
+        <DE.Provider value={state}>
             <div className="App">
-                {de.windows.map(window => (
+                {state.desktopEnvironment.windows.map(window => (
                     <WindowComponent
                         key={window.id}
                         windowInfo={window}
@@ -93,7 +99,7 @@ function GuiEnvironment(props: GuiEnvironmentProps): JSX.Element {
                         maximizeFunction={createMaximizeWindow(window)}
                         minimizeFunction={createMinimizeWindow(window)}
                         closeFunction={createCloseWindow(window)}>
-                        {window.content}
+                        {window.content && {...window.content, props: {...window.content.props, windowInfo: window}}}
                     </WindowComponent>
                 ))}
                 {/*<WindowComponent title="Calculator" minWidth={230} minHeight={32} x={30} y={30} width={350} height={550} onFocused={onWindowFocused}/>*/}

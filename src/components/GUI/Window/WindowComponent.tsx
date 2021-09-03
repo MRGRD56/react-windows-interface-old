@@ -29,6 +29,7 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
             isMaximized: state.isMaximized !== true
         };
         setState(newState);
+        windowInfo.isMaximized = newState.isMaximized; //FIXME
         setTimeout(() => {
             setState({
                 ...newState,
@@ -42,19 +43,23 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
 
     const onDrag = (e: any) => {
         const [x, y] = [e.movementX, e.movementY];
-        setRectangle(new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size));
+        const newRectangle = new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size);
+        setRectangle(newRectangle);
+        windowInfo.rectangle = newRectangle; //FIXME
         if (state.isMaximized) {
             const titleButtonsWidth = 138;
             const draggableAreaWidth = rectangle.size.width - titleButtonsWidth - 10;
             const newXPos = e.clientX - Math.min(e.clientX, draggableAreaWidth);
-            setRectangle(
-                new Rectangle(
-                    new Point(newXPos, 0),
-                    rectangle.size));
+            const newRectangle = new Rectangle(
+                new Point(newXPos, 0),
+                rectangle.size);
+            setRectangle(newRectangle);
             setState({
                 ...state,
                 isMaximized: false
             });
+            windowInfo.isMaximized = false; //FIXME
+            windowInfo.rectangle = newRectangle; //FIXME
             maximizeFunction?.(false);
         }
     };
@@ -64,7 +69,9 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
             toggleIsMaximized();
         }
         if (rectangle.point.y < 0) {
-            setRectangle(new Rectangle(new Point(rectangle.point.x, 0), rectangle.size));
+            const newRectangle = new Rectangle(new Point(rectangle.point.x, 0), rectangle.size);
+            setRectangle(newRectangle);
+            windowInfo.rectangle = newRectangle; //FIXME
         }
     };
 
@@ -140,6 +147,7 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
         // }
 
         setRectangle(newRectangle);
+        windowInfo.rectangle = newRectangle; //FIXME
     }
 
     let isResizing = false;
@@ -151,23 +159,26 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
     function onResizeStop() {
         isResizing = false;
         if (rectangle.point.y < 0) {
-            setRectangle(
-                new Rectangle(
-                    new Point(
-                        rectangle.point.x,
-                        0),
-                    new Size(
-                        rectangle.size.width,
-                        rectangle.size.height + rectangle.point.y)));
+            const newRectangle = new Rectangle(
+                new Point(
+                    rectangle.point.x,
+                    0),
+                new Size(
+                    rectangle.size.width,
+                    rectangle.size.height + rectangle.point.y));
+            setRectangle(newRectangle);
+            windowInfo.rectangle = newRectangle; //FIXME
         }
         if (rectangle.size.width < getMinSize().width
             || rectangle.size.height < getMinSize().height) {
-            setRectangle(new Rectangle(
+            const newRectangle = new Rectangle(
                 rectangle.point,
                 new Size(
                     Math.max(rectangle.size.width, getMinSize().width),
                     Math.max(rectangle.size.height, getMinSize().height))
-            ));
+            );
+            setRectangle(newRectangle);
+            windowInfo.rectangle = newRectangle; //FIXME
         }
     }
 
@@ -189,7 +200,8 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
                 isClosed: true,
                 isAnimatedShort: false
             });
-            closeFunction?.();
+            //closeFunction?.();
+            windowInfo.close(); //FIXME
         }, 75);
     }
 
@@ -200,6 +212,7 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
             isAnimatedNormal: true
         };
         setState(newState);
+        windowInfo.isMinimized = true; //FIXME
         minimizeFunction?.(true);
         setTimeout(() => {
             setState({
