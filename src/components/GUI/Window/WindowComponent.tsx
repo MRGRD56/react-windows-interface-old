@@ -45,9 +45,8 @@ function WindowComponent({isMaximized, isMinimized, children, onFocused, isResiz
         setRectangle(new Rectangle(new Point(rectangle.point.x + x, rectangle.point.y + y), rectangle.size));
         if (state.isMaximized) {
             const titleButtonsWidth = 138;
-            const xPosPercentage = e.clientX / (window.innerWidth - titleButtonsWidth);
-            const newXPos = e.clientX - (rectangle.size.width - titleButtonsWidth) * xPosPercentage;
-            console.log(xPosPercentage, newXPos);
+            const draggableAreaWidth = rectangle.size.width - titleButtonsWidth - 10;
+            const newXPos = e.clientX - Math.min(e.clientX, draggableAreaWidth);
             setRectangle(
                 new Rectangle(
                     new Point(newXPos, 0),
